@@ -13,6 +13,7 @@
 
         Milestone 2
         Verificato il corretto funzionamento del nostro codice, spostiamo la logica in un file functions.php che includeremo poi nella pagina principale
+
         Milestone 3 (BONUS)
         Invece di visualizzare la password nella index, effettuare un redirect ad una pagina dedicata che tramite $_SESSION recupererà la password da mostrare all’utente.
         Milestone 4 (BONUS)
@@ -34,32 +35,7 @@
 
     var_dump($p_length);
 
-    function extract_item($array) {
-        return $array[rand(0, count($array)-1)];
-    }
-
-    function pw_generator ($pw_length, $lower_alphabet, $upper_alphabet, $symbols) {
-        $generated_pw = "";
-
-        for ($i=0; $i < $pw_length; $i++) { 
-            switch (rand(1, 3)) {
-                case 1:
-                    // lower
-                    $generated_pw .= extract_item($lower_alphabet);
-                    break;
-                case 2:
-                    // upper
-                    $generated_pw .= extract_item($upper_alphabet);
-                    break;
-                case 3:
-                    // symbols
-                    $generated_pw .= extract_item($symbols);
-                    break;
-            }
-        }
-
-        return $generated_pw;
-    }
+    include_once __DIR__ . '/functions.php';
 
     $password = pw_generator($p_length, $lower_alphabet, $upper_alphabet, $symbols);
 
