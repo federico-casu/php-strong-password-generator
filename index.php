@@ -16,32 +16,43 @@
 
         Milestone 3 (BONUS)
         Invece di visualizzare la password nella index, effettuare un redirect ad una pagina dedicata che tramite $_SESSION recupererà la password da mostrare all’utente.
+
         Milestone 4 (BONUS)
         Gestire ulteriori parametri per la password: quali caratteri usare fra numeri, lettere e simboli. Possono essere scelti singolarmente (es. solo numeri) oppure possono essere combinati fra loro (es. numeri e simboli, oppure tutti e tre insieme).
         Dare all’utente anche la possibilità di permettere o meno la ripetizione di caratteri uguali.
 
     ------------------------------------------------------------------------------ */
+// avvio la sessione
+session_start();
 
-    $lower_alphabet = [ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" ];
-    $upper_alphabet = [];
-    $symbols = [ "!", "£", "?", "^", "@", "#", "-", "_", ".", ",", ":", ";", "[", "]", "{", "}", "€" ];
+$lower_alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+$upper_alphabet = [];
+$symbols = ["!", "£", "?", "^", "@", "#", "-", "_", ".", ",", ":", ";", "[", "]", "{", "}", "€"];
 
-    foreach ($lower_alphabet as $item) {
-        $upper_alphabet[] = ucfirst($item);
-    }
+foreach ($lower_alphabet as $item) {
+    $upper_alphabet[] = ucfirst($item);
+}
 
-    $p_length = (int)$_GET["password_length"];
-    $generated_pw = "";
+if (!isset($_GET["password_length"])) {
+    $_GET["password_length"] = null;
+}
 
-    var_dump($p_length);
+if (!isset($_GET["repeat"])) {
+    $_GET["repeat"] = null;
+}
 
-    include_once __DIR__ . '/functions.php';
+$p_length = (int)$_GET["password_length"];
+$repeat = $_GET["repeat"];
 
-    $password = pw_generator($p_length, $lower_alphabet, $upper_alphabet, $symbols);
+include_once __DIR__ . '/functions.php';
 
-    var_dump($password);
+$password = pw_generator($p_length, $repeat, $lower_alphabet, $upper_alphabet, $symbols);
 
-    echo $password;
+$_SESSION['password'] = $password;
+
+if ($p_length != null) {
+    header('Location: ./success.php');
+}
 
 ?>
 
@@ -60,12 +71,30 @@
 
 <body>
 
-    <form action="index.php" method="get">
-        <label for="password_length">Lunghezza password</label>
-        <input name="password_length" type="number" min=8 max=16>
-        <p class="form-text text-muted">(La password deve essere lunga minimo 8 caratteri e massimo 16)</p>
-        <button class="btn btn-primary" type="submit">Genera</button>
-    </form>
+    <div class="container-fluid border border-success py-5 px-3">
+        <div class="container border border-danger">
+            <h1 class="text-center">Strong password generator</h1>
+            <h2 class="text-center">Genera una password sicura</h2>
+            <div class="row border border-warning justify-content-center bg-white py-3 rounded-3 mt-4">
+                <form class="col-8 border border-primary d-flex flex-column align-items-start bg-primary-subtle p-3 rounded-3 " action="index.php" method="get">
+                    <label class="mb-2" for="password_length">Lunghezza password</label>
+                    <input name="password_length" type="number" min=8 max=16>
+                    <p class="form-text text-muted">(La password deve essere lunga minimo 8 caratteri e massimo 16)</p>
+
+                    <label class="mb-2" for="repeat">Consenti ripetizione caratteri</label>
+                    <div>
+                        <input type="radio" name="repeat" value="1">
+                        <label class="me-2" for="repeat">Si</label>
+                        <input type="radio" name="repeat" value="0">
+                        <label for="repeat">No</label>
+                    </div>
+
+                    <button class="btn btn-primary mt-3" type="submit">Genera</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Js Boostrap -->
