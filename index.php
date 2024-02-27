@@ -41,14 +41,21 @@ if (!isset($_GET["repeat"])) {
     $_GET["repeat"] = null;
 }
 
+if (!isset($_GET["whitch_char"])) {
+    $_GET["whitch_char"] = [];
+}
+
 $p_length = (int)$_GET["password_length"];
 $repeat = $_GET["repeat"];
+// $chars[] = $_GET["whitch_char"];
+$chars = $_GET["whitch_char"];
 
 include_once __DIR__ . '/functions.php';
 
-$password = pw_generator($p_length, $repeat, $lower_alphabet, $upper_alphabet, $symbols);
+$password = pw_generator($p_length, $repeat, $chars, $lower_alphabet, $upper_alphabet, $symbols);
 
 $_SESSION['password'] = $password;
+// $_SESSION['chars'] = $chars;
 
 if ($p_length != null) {
     header('Location: ./success.php');
@@ -71,17 +78,17 @@ if ($p_length != null) {
 
 <body>
 
-    <div class="container-fluid border border-success py-5 px-3">
-        <div class="container border border-danger">
+    <div class="container-fluid py-5 px-3">
+        <div class="container">
             <h1 class="text-center">Strong password generator</h1>
             <h2 class="text-center">Genera una password sicura</h2>
-            <div class="row border border-warning justify-content-center bg-white py-3 rounded-3 mt-4">
-                <form class="col-8 border border-primary d-flex flex-column align-items-start bg-primary-subtle p-3 rounded-3 " action="index.php" method="get">
-                    <label class="mb-2" for="password_length">Lunghezza password</label>
+            <div class="row justify-content-center bg-white py-3 rounded-3 mt-4">
+                <form class="col-8 d-flex flex-column align-items-start bg-primary-subtle p-3 rounded-3 " action="index.php" method="get">
+                    <label class="my-2" for="password_length">Lunghezza password</label>
                     <input name="password_length" type="number" min=8 max=16>
                     <p class="form-text text-muted">(La password deve essere lunga minimo 8 caratteri e massimo 16)</p>
 
-                    <label class="mb-2" for="repeat">Consenti ripetizione caratteri</label>
+                    <label class="my-2" for="repeat">Consenti ripetizione caratteri</label>
                     <div>
                         <input type="radio" name="repeat" value="1">
                         <label class="me-2" for="repeat">Si</label>
@@ -89,10 +96,23 @@ if ($p_length != null) {
                         <label for="repeat">No</label>
                     </div>
 
+                    <label class="my-2" for="whitch_char">Includi:</label>
+                    <div>
+                        <input type="checkbox" name="whitch_char[]" value="lower_alphabet" id="lower_alphabet">
+                        <label class="me-2" for="lower_alphabet">Lettere minuscole</label>
+                        <input type="checkbox" name="whitch_char[]" value="upper_alphabet" id="upper_alphabet">
+                        <label for="upper_alphabet">Lettere Maiuscole</label>
+                        <input type="checkbox" name="whitch_char[]" value="numbers" id="numbers">
+                        <label for="numbers">Numeri</label>
+                        <input type="checkbox" name="whitch_char[]" value="symbols" id="symbols">
+                        <label for="symbols">Simboli</label>
+                    </div>
                     <button class="btn btn-primary mt-3" type="submit">Genera</button>
                 </form>
             </div>
+
         </div>
+    </div>
     </div>
 
 
